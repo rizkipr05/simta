@@ -5,7 +5,7 @@
     <div class="flex items-center justify-between">
         <div>
             <a href="{{route("admin.skripsi.index")}}" class="text-xs text-blue-600 hover:underline">← Kembali ke Manajemen Skripsi</a>
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Detail Skripsi Mahasiswa</h1>
+            <h1 class="text-2xl font-bold text-slate-900 mt-1">Detail Skripsi Mahasiswa</h1>
         </div>
         <span class="status-badge bg-blue-100 text-blue-700">{{ucfirst($skripsi->status)}}</span>
     </div>
@@ -14,15 +14,15 @@
         <div class="flex items-center gap-4 mb-6 pb-6 border-b">
             <img src="{{$skripsi->mahasiswa?->foto_url}}" class="w-14 h-14 rounded-2xl object-cover">
             <div>
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white">{{$skripsi->mahasiswa?->nama}}</h2>
+                <h2 class="text-lg font-bold text-slate-900">{{$skripsi->mahasiswa?->nama}}</h2>
                 <p class="text-xs text-slate-500">{{$skripsi->mahasiswa?->nim}} · {{$skripsi->mahasiswa?->prodi?->nama}}</p>
             </div>
         </div>
 
         <div class="space-y-4 text-sm">
-            <div><p class="text-xs font-semibold text-slate-400 uppercase">Judul Skripsi</p><p class="font-semibold text-slate-900 dark:text-white text-base mt-1">{{$skripsi->judul}}</p></div>
-            <div><p class="text-xs font-semibold text-slate-400 uppercase">Bidang Kajian</p><p class="text-slate-700 dark:text-slate-300">{{$skripsi->bidang_kajian ?? "-"}}</p></div>
-            <div><p class="text-xs font-semibold text-slate-400 uppercase">Deskripsi</p><p class="text-slate-700 dark:text-slate-300 leading-relaxed">{{$skripsi->deskripsi ?? "-"}}</p></div>
+            <div><p class="text-xs font-semibold text-slate-400 uppercase">Judul Skripsi</p><p class="font-semibold text-slate-900 text-base mt-1">{{$skripsi->judul}}</p></div>
+            <div><p class="text-xs font-semibold text-slate-400 uppercase">Bidang Kajian</p><p class="text-slate-700">{{$skripsi->bidang_kajian ?? "-"}}</p></div>
+            <div><p class="text-xs font-semibold text-slate-400 uppercase">Deskripsi</p><p class="text-slate-700 leading-relaxed">{{$skripsi->deskripsi ?? "-"}}</p></div>
         </div>
 
         @if($skripsi->status === "pengajuan")
@@ -35,7 +35,7 @@
 
     {{-- Penetapan Pembimbing --}}
     <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-        <h2 class="font-bold text-slate-900 dark:text-white mb-4">Dosen Pembimbing</h2>
+        <h2 class="font-bold text-slate-900 mb-4">Dosen Pembimbing</h2>
         <div class="space-y-3 mb-6">
             @forelse($skripsi->pembimbing as $p)
             <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">

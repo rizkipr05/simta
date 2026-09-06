@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dosen;
 use App\Models\Mahasiswa;
 use App\Models\Skripsi;
 use App\Models\TahunAkademik;
@@ -31,8 +32,9 @@ class SkripsiController extends Controller
     public function show(Skripsi $skripsi)
     {
         $skripsi->load(['mahasiswa.prodi', 'tahunAkademik', 'pembimbing.dosen', 'skPembimbing', 'ujian.penguji.dosen', 'ujian.beritaAcara', 'lembarPengesahan', 'dokumen']);
+        $dosenList = Dosen::where('is_aktif', true)->get();
 
-        return view('admin.skripsi.show', compact('skripsi'));
+        return view('admin.skripsi.show', compact('skripsi', 'dosenList'));
     }
 
     public function edit(Skripsi $skripsi)
