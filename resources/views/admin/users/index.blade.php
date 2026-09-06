@@ -1,0 +1,124 @@
+@extends("layouts.app")
+@section("title", "Manajemen User & Role")
+@section("breadcrumb", "Manajemen User")
+
+@section("content")
+<div class="space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Manajemen User &amp; Role</h1>
+            <p class="text-xs text-slate-500 mt-1">Kelola data pengguna, penetapan role, dan reset password sistem SIMTA</p>
+        </div>
+        <button onclick="document.getElementById('modalTambahUser').classList.remove('hidden')" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Tambah User Baru
+        </button>
+    </div>
+
+    {{-- Filter & Search --}}
+    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, email, username..." class="px-4 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none w-full md:w-64">
+            <select name="role" class="px-4 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <option value="">Semua Role</option>
+                <option value="super_admin" {{ request('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                <option value="kaprodi" {{ request('role') == 'kaprodi' ? 'selected' : '' }}>Kaprodi</option>
+                <option value="dekan" {{ request('role') == 'dekan' ? 'selected' : '' }}>Dekan</option>
+                <option value="dosen" {{ request('role') == 'dosen' ? 'selected' : '' }}>Dosen</option>
+                <option value="mahasiswa" {{ request('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+            </select>
+            <button type="submit" class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-xl hover:bg-slate-700 transition-all">Filter</button>
+        </form>
+    </div>
+
+    {{-- Tabel User --}}
+    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-600">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-bold tracking-wider">
+                    <tr>
+                        <th class="px-6 py-3.5">Nama &amp; Email</th>
+                        <th class="px-6 py-3.5">Username</th>
+                        <th class="px-6 py-3.5">Role</th>
+                        <th class="px-6 py-3.5 text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse($users as $u)
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <p class="font-extrabold text-slate-900 text-sm">{{ $u->name }}</p>
+                            <p class="text-slate-500 text-[11px]">{{ $u->email }}</p>
+                        </td>
+                        <td class="px-6 py-4 font-mono text-slate-700 font-semibold">{{ $u->username ?? '-' }}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase border bg-emerald-50 text-emerald-700 border-emerald-200">
+                                {{ str_replace('_', ' ', $u->role) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <form method="POST" action="{{ route('admin.users.destroy', $u) }}" class="inline" onsubmit="return confirm('Yakin ingin menghapus user ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-800 font-bold">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-8 text-center text-slate-400 font-semibold">Tidak ada data user ditemukan.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        <div class="p-4 border-t border-slate-100">
+            {{ $users->links() }}
+        </div>
+    </div>
+</div>
+
+{{-- Modal Tambah User --}}
+<div id="modalTambahUser" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+        <div class="flex items-center justify-between border-b pb-3">
+            <h3 class="font-extrabold text-slate-900 text-base">Tambah User Baru</h3>
+            <button onclick="document.getElementById('modalTambahUser').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">&times;</button>
+        </div>
+        <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-3 text-xs">
+            @csrf
+            <div>
+                <label class="block font-bold text-slate-700 uppercase mb-1">Nama Lengkap *</label>
+                <input type="text" name="name" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 uppercase mb-1">Email *</label>
+                <input type="email" name="email" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 uppercase mb-1">Username *</label>
+                <input type="text" name="username" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 uppercase mb-1">Password *</label>
+                <input type="password" name="password" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 uppercase mb-1">Role *</label>
+                <select name="role" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    <option value="super_admin">Super Admin</option>
+                    <option value="pengelola_skripsi">Pengelola Skripsi</option>
+                    <option value="kaprodi">Kaprodi</option>
+                    <option value="dekan">Dekan</option>
+                    <option value="dosen">Dosen</option>
+                    <option value="mahasiswa">Mahasiswa</option>
+                </select>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" onclick="document.getElementById('modalTambahUser').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-xl">Batal</button>
+                <button type="submit" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded-xl shadow-md">Simpan User</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

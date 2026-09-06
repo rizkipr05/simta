@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('dosen', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('prodi_id')->nullable()->constrained('program_studi')->nullOnDelete();
+            $table->string('nidn', 20)->unique();
+            $table->string('nama');
+            $table->string('gelar_depan')->nullable();
+            $table->string('gelar_belakang')->nullable();
+            $table->string('jabatan')->nullable(); // Asisten Ahli, Lektor, etc.
+            $table->string('status_kepegawaian')->default('tetap'); // tetap, tidak_tetap
+            $table->string('email')->nullable();
+            $table->string('no_hp', 20)->nullable();
+            $table->string('foto')->nullable();
+            $table->boolean('is_aktif')->default(true);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('dosen');
+    }
+};
