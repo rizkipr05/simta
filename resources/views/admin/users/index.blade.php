@@ -57,11 +57,53 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-right space-x-2">
+                            <button type="button" onclick="document.getElementById('modalEditUser-{{ $u->id }}').classList.remove('hidden')" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition-all">Edit</button>
                             <form method="POST" action="{{ route('admin.users.destroy', $u) }}" class="inline" onsubmit="return confirm('Yakin ingin menghapus user ini?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-800 font-bold">Hapus</button>
+                                <button type="submit" class="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold rounded-lg transition-all">Hapus</button>
                             </form>
+
+                            {{-- Modal Edit User --}}
+                            <div id="modalEditUser-{{ $u->id }}" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4 text-left">
+                                <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+                                    <div class="flex items-center justify-between border-b pb-3">
+                                        <h3 class="font-extrabold text-slate-900 text-base">Edit User</h3>
+                                        <button type="button" onclick="document.getElementById('modalEditUser-{{ $u->id }}').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 font-bold">&times;</button>
+                                    </div>
+                                    <form method="POST" action="{{ route('admin.users.update', $u) }}" class="space-y-3 text-xs">
+                                        @csrf
+                                        @method('PUT')
+                                        <div>
+                                            <label class="block font-bold text-slate-700 uppercase mb-1">Nama Lengkap *</label>
+                                            <input type="text" name="name" value="{{ $u->name }}" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block font-bold text-slate-700 uppercase mb-1">Email *</label>
+                                            <input type="email" name="email" value="{{ $u->email }}" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block font-bold text-slate-700 uppercase mb-1">Username *</label>
+                                            <input type="text" name="username" value="{{ $u->username }}" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block font-bold text-slate-700 uppercase mb-1">Role *</label>
+                                            <select name="role" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                                <option value="super_admin" {{ $u->role === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                                                <option value="pengelola_skripsi" {{ $u->role === 'pengelola_skripsi' ? 'selected' : '' }}>Pengelola Skripsi</option>
+                                                <option value="kaprodi" {{ $u->role === 'kaprodi' ? 'selected' : '' }}>Kaprodi</option>
+                                                <option value="dekan" {{ $u->role === 'dekan' ? 'selected' : '' }}>Dekan</option>
+                                                <option value="dosen" {{ $u->role === 'dosen' ? 'selected' : '' }}>Dosen</option>
+                                                <option value="mahasiswa" {{ $u->role === 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                                            </select>
+                                        </div>
+                                        <div class="flex justify-end gap-2 pt-2">
+                                            <button type="button" onclick="document.getElementById('modalEditUser-{{ $u->id }}').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-xl">Batal</button>
+                                            <button type="submit" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded-xl shadow-md">Simpan Perubahan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     @empty

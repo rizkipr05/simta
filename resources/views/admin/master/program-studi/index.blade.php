@@ -37,7 +37,14 @@
                             <span class="status-badge bg-emerald-100 text-emerald-800 border border-emerald-200">{{ $p->akreditasi ?? 'Unggul' }}</span>
                         </td>
                         <td class="px-4 py-3.5">
-                            <a href="{{ route('admin.master.program-studi.edit', $p) }}" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition-all">Edit</a>
+                            <div class="flex gap-2">
+                                <a href="{{ route('admin.master.program-studi.edit', $p) }}" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition-all">Edit</a>
+                                <form method="POST" action="{{ route('admin.master.program-studi.destroy', $p) }}" onsubmit="return confirm('Yakin ingin menghapus data ini?');" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold rounded-lg transition-all">Hapus</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty

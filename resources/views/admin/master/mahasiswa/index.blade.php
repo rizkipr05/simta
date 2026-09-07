@@ -62,6 +62,11 @@
                             <div class="flex gap-2">
                                 <a href="{{ route('admin.master.mahasiswa.show', $mhs) }}" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg transition-all">Detail</a>
                                 <a href="{{ route('admin.master.mahasiswa.edit', $mhs) }}" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition-all">Edit</a>
+                                <form method="POST" action="{{ route('admin.master.mahasiswa.destroy', $mhs) }}" onsubmit="return confirm('Yakin ingin menghapus data ini?');" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold rounded-lg transition-all">Hapus</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
