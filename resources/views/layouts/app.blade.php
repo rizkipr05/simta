@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
+        [x-cloak] { display: none !important; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .sidebar-link.active { 
             background: linear-gradient(135deg, #059669, #047857) !important; 
@@ -55,16 +56,69 @@
 </head>
 <body class="h-full bg-slate-100 text-slate-800 antialiased" x-data="{ sidebarOpen: true, mobileOpen: false }">
 
-<div class="flex h-screen overflow-hidden">
-    {{-- ELEGANT DARK NAVY SIDEBAR --}}
-    <div x-show="mobileOpen" @click="mobileOpen = false"
-         class="fixed inset-0 z-20 bg-slate-900/60 backdrop-blur-sm lg:hidden"
-         x-transition:enter="transition duration-200" x-transition:leave="transition duration-200"></div>
+<div class="flex h-screen overflow-hidden relative">
 
+    {{-- MOBILE BACKDROP OVERLAY --}}
+    <div x-show="mobileOpen"
+         x-cloak
+         @click="mobileOpen = false"
+         x-transition:enter="transition-opacity ease-linear duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition-opacity ease-linear duration-300"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm lg:hidden"></div>
+
+    {{-- MOBILE SIDEBAR DRAWER --}}
+    <aside x-show="mobileOpen"
+           x-cloak
+           x-transition:enter="transition ease-in-out duration-300 transform"
+           x-transition:enter-start="-translate-x-full"
+           x-transition:enter-end="translate-x-0"
+           x-transition:leave="transition ease-in-out duration-300 transform"
+           x-transition:leave-start="translate-x-0"
+           x-transition:leave-end="-translate-x-full"
+           class="fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] flex flex-col bg-[#0f172a] text-slate-300 shadow-2xl border-r border-slate-800 lg:hidden">
+
+        {{-- MOBILE SIDEBAR BRAND HEADER --}}
+        <div class="flex h-16 items-center px-4 border-b border-slate-800 bg-[#090d16] justify-between">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center flex-shrink-0 shadow-md">
+                    <img src="{{ asset('asset/logo.png') }}" class="w-full h-full object-contain" alt="Logo UMMU">
+                </div>
+                <div class="overflow-hidden">
+                    <p class="font-extrabold text-white text-base tracking-wide leading-tight">SIMTA UMMU</p>
+                    <p class="text-emerald-400 text-[10px] font-bold tracking-wider uppercase leading-tight">Fakultas Teknik</p>
+                </div>
+            </div>
+            <button @click="mobileOpen = false" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        {{-- MOBILE SIDEBAR NAVIGATION LINKS --}}
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
+            @include('components.sidebar-nav')
+        </nav>
+
+        {{-- MOBILE USER FOOTER PROFILE --}}
+        <div class="p-3.5 border-t border-slate-800 bg-[#090d16]">
+            <div class="flex items-center gap-3 min-w-0">
+                <img src="{{ auth()->user()->avatar_url }}" class="w-9 h-9 rounded-full flex-shrink-0 object-cover ring-2 ring-emerald-500" alt="">
+                <div class="overflow-hidden flex-1 min-w-0">
+                    <p class="text-white text-sm font-bold truncate">{{ auth()->user()->name }}</p>
+                    <p class="text-emerald-400 text-xs font-semibold truncate">{{ auth()->user()->getRoleLabel() }}</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    {{-- DESKTOP SIDEBAR --}}
     <aside :class="sidebarOpen ? 'w-64' : 'w-[76px]'"
-           class="fixed inset-y-0 left-0 z-30 flex-shrink-0 flex flex-col bg-[#0f172a] text-slate-300 transition-all duration-300 ease-in-out lg:relative shadow-2xl border-r border-slate-800">
+           class="hidden lg:flex relative inset-y-0 left-0 z-30 flex-shrink-0 flex-col bg-[#0f172a] text-slate-300 transition-all duration-300 ease-in-out shadow-2xl border-r border-slate-800">
 
-        {{-- SIDEBAR BRAND HEADER --}}
+        {{-- DESKTOP SIDEBAR BRAND HEADER --}}
         <div class="flex h-16 items-center px-4 border-b border-slate-800 bg-[#090d16]">
             <div class="flex items-center gap-3 min-w-0">
                 <div class="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center flex-shrink-0 shadow-md">
@@ -77,12 +131,12 @@
             </div>
         </div>
 
-        {{-- SIDEBAR NAVIGATION LINKS --}}
+        {{-- DESKTOP SIDEBAR NAVIGATION LINKS --}}
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
             @include('components.sidebar-nav')
         </nav>
 
-        {{-- USER FOOTER PROFILE --}}
+        {{-- DESKTOP USER FOOTER PROFILE --}}
         <div class="p-3.5 border-t border-slate-800 bg-[#090d16]">
             <div class="flex items-center gap-3 min-w-0">
                 <img src="{{ auth()->user()->avatar_url }}" class="w-9 h-9 rounded-full flex-shrink-0 object-cover ring-2 ring-emerald-500" alt="">
@@ -95,7 +149,7 @@
     </aside>
 
     {{-- MAIN CONTENT WRAPPER --}}
-    <div class="flex-1 flex flex-col overflow-hidden bg-slate-100">
+    <div class="flex-1 flex flex-col overflow-hidden bg-slate-100 min-w-0">
         {{-- UMMU CAMPUS TOPBAR STRIP --}}
         <div class="bg-gradient-to-r from-emerald-800 via-teal-800 to-emerald-900 text-white text-xs py-2 px-5 hidden sm:flex items-center justify-between border-b border-emerald-900 shadow-sm">
             <div class="flex items-center gap-5 font-semibold text-emerald-100">
@@ -108,20 +162,27 @@
         </div>
 
         {{-- MAIN HEADER --}}
-        <header class="h-16 flex-shrink-0 bg-white border-b border-slate-200/80 flex items-center px-6 gap-4 shadow-sm z-10">
-            <button @click="sidebarOpen = !sidebarOpen"
-                    class="text-slate-600 hover:text-emerald-700 transition-colors p-2 rounded-xl hover:bg-slate-100 border border-slate-200">
+        <header class="h-16 flex-shrink-0 bg-white border-b border-slate-200/80 flex items-center px-4 sm:px-6 gap-3 sm:gap-4 shadow-sm z-10">
+            {{-- Mobile Toggle --}}
+            <button @click="mobileOpen = true"
+                    class="lg:hidden text-slate-600 hover:text-emerald-700 transition-colors p-2 rounded-xl hover:bg-slate-100 border border-slate-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
 
-            <div class="flex-1 font-bold text-slate-800 text-sm">
+            {{-- Desktop Toggle --}}
+            <button @click="sidebarOpen = !sidebarOpen"
+                    class="hidden lg:block text-slate-600 hover:text-emerald-700 transition-colors p-2 rounded-xl hover:bg-slate-100 border border-slate-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+
+            <div class="flex-1 font-bold text-slate-800 text-xs sm:text-sm truncate">
                 @yield('breadcrumb', 'Portal Akademik Skripsi & Yudisium')
             </div>
 
             {{-- USER DROPDOWN --}}
             <div class="flex items-center gap-3">
                 <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open" class="flex items-center gap-3 px-3.5 py-1.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition shadow-sm">
+                    <button @click="open = !open" class="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-3.5 py-1.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition shadow-sm">
                         <img src="{{ auth()->user()->avatar_url }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-600" alt="">
                         <div class="hidden sm:block text-left">
                             <p class="text-xs font-bold text-slate-900 leading-tight">{{ auth()->user()->name }}</p>
@@ -130,6 +191,7 @@
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     <div x-show="open" @click.outside="open = false"
+                         x-cloak
                          x-transition class="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50">
                         <div class="px-4 py-2.5 border-b border-slate-100 bg-emerald-50/60">
                             <p class="text-sm font-bold text-slate-900 truncate">{{ auth()->user()->name }}</p>
@@ -152,7 +214,7 @@
         </header>
 
         {{-- PAGE CONTENT CONTAINER --}}
-        <main class="flex-1 overflow-y-auto p-6 lg:p-8 bg-slate-100">
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-100">
             @if(session('success'))
                 <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-2xl flex items-center gap-3 shadow-sm"
                      x-data="{show:true}" x-show="show" x-transition>
@@ -179,3 +241,4 @@
 @stack('scripts')
 </body>
 </html>
+
