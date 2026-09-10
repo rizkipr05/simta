@@ -18,7 +18,7 @@
     {{-- Filter & Search --}}
     <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, email, username..." class="px-4 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none w-full md:w-64">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, email..." class="px-4 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none w-full md:w-64">
             <select name="role" class="px-4 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                 <option value="">Semua Role</option>
                 <option value="super_admin" {{ request('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
@@ -38,7 +38,6 @@
                 <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-bold tracking-wider">
                     <tr>
                         <th class="px-6 py-3.5">Nama &amp; Email</th>
-                        <th class="px-6 py-3.5">Username</th>
                         <th class="px-6 py-3.5">Role</th>
                         <th class="px-6 py-3.5 text-right">Aksi</th>
                     </tr>
@@ -50,7 +49,6 @@
                             <p class="font-extrabold text-slate-900 text-sm">{{ $u->name }}</p>
                             <p class="text-slate-500 text-[11px]">{{ $u->email }}</p>
                         </td>
-                        <td class="px-6 py-4 font-mono text-slate-700 font-semibold">{{ $u->username ?? '-' }}</td>
                         <td class="px-6 py-4">
                             <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase border bg-emerald-50 text-emerald-700 border-emerald-200">
                                 {{ str_replace('_', ' ', $u->role) }}
@@ -82,10 +80,7 @@
                                             <label class="block font-bold text-slate-700 uppercase mb-1">Email *</label>
                                             <input type="email" name="email" value="{{ $u->email }}" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                         </div>
-                                        <div>
-                                            <label class="block font-bold text-slate-700 uppercase mb-1">Username *</label>
-                                            <input type="text" name="username" value="{{ $u->username }}" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                                        </div>
+
                                         <div>
                                             <label class="block font-bold text-slate-700 uppercase mb-1">Role *</label>
                                             <select name="role" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
@@ -137,10 +132,7 @@
                 <label class="block font-bold text-slate-700 uppercase mb-1">Email *</label>
                 <input type="email" name="email" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
             </div>
-            <div>
-                <label class="block font-bold text-slate-700 uppercase mb-1">Username *</label>
-                <input type="text" name="username" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-            </div>
+
             <div>
                 <label class="block font-bold text-slate-700 uppercase mb-1">Password *</label>
                 <input type="password" name="password" required class="w-full px-3.5 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none">

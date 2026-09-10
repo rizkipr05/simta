@@ -18,8 +18,7 @@ class UserController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('username', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -37,7 +36,6 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:8',
             'role' => ['required', Rule::in(['super_admin', 'pengelola_skripsi', 'kaprodi', 'dekan', 'dosen', 'mahasiswa'])],
         ]);
@@ -45,7 +43,6 @@ class UserController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'username' => $request->username,
             'password' => Hash::make($request->password),
             'role' => $request->role,
             'is_active' => true,
@@ -59,14 +56,12 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
             'role' => ['required', Rule::in(['super_admin', 'pengelola_skripsi', 'kaprodi', 'dekan', 'dosen', 'mahasiswa'])],
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'username' => $request->username,
             'role' => $request->role,
         ]);
 
