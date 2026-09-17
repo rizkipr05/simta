@@ -29,42 +29,55 @@
 
         <div class="p-5">
             @if(!$skripsi)
+                @if($errors->any())
+                    <div class="mb-4 p-4 bg-rose-50 border border-rose-200 text-rose-900 rounded-2xl shadow-sm text-sm">
+                        <p class="font-bold">Terjadi kesalahan pada input Anda:</p>
+                        <ul class="list-disc pl-5 mt-2 text-rose-700">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form method="POST" action="{{ route('mahasiswa.pengajuan.store') }}" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Judul Skripsi *</label>
-                        <textarea name="judul" rows="2" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" required placeholder="Tuliskan judul skripsi yang diajukan..."></textarea>
+                        <textarea name="judul" rows="2" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm @error('judul') border-rose-500 @enderror" required placeholder="Tuliskan judul skripsi yang diajukan...">{{ old('judul') }}</textarea>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Bidang Penelitian</label>
-                            <input name="bidang_penelitian" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Contoh: AI, IoT, Sistem Informasi, Rekayasa Perangkat Lunak">
+                            <input name="bidang_penelitian" value="{{ old('bidang_penelitian') }}" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Contoh: AI, IoT, Sistem Informasi, Rekayasa Perangkat Lunak">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Metode</label>
-                            <input name="metode" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Contoh: Waterfall, Agile, R&D, Survey, Eksperimen">
+                            <input name="metode" value="{{ old('metode') }}" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Contoh: Waterfall, Agile, R&D, Survey, Eksperimen">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Latar Belakang</label>
-                        <textarea name="latar_belakang" rows="4" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Jelaskan alasan dan konteks penelitian..."></textarea>
+                        <textarea name="latar_belakang" rows="4" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Jelaskan alasan dan konteks penelitian...">{{ old('latar_belakang') }}</textarea>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Rumusan Masalah</label>
-                        <textarea name="rumusan_masalah" rows="3" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Tuliskan pertanyaan utama yang ingin dijawab..."></textarea>
+                        <textarea name="rumusan_masalah" rows="3" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Tuliskan pertanyaan utama yang ingin dijawab...">{{ old('rumusan_masalah') }}</textarea>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Tujuan Penelitian</label>
-                        <textarea name="tujuan" rows="3" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Tujuan umum dan khusus dari penelitian..."></textarea>
+                        <textarea name="tujuan" rows="3" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Tujuan umum dan khusus dari penelitian...">{{ old('tujuan') }}</textarea>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Upload Proposal</label>
-                        <input type="file" name="proposal_file" accept="application/pdf,.doc,.docx" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-100 file:text-emerald-700">
+                        <input type="file" name="proposal_file" accept="application/pdf,.doc,.docx" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-100 file:text-emerald-700 @error('proposal_file') border border-rose-500 @enderror">
+                        @error('proposal_file')
+                            <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 transition-all">

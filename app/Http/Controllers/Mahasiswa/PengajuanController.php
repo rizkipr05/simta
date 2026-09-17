@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dokumen;
 use App\Models\Mahasiswa;
 use App\Models\Skripsi;
 use App\Models\TahunAkademik;
@@ -34,7 +35,11 @@ class PengajuanController extends Controller
             'tujuan' => 'nullable|string',
             'metode' => 'nullable|string',
             'bidang_penelitian' => 'nullable|string|max:255',
-            'proposal_file' => 'nullable|file|mimes:pdf,doc,docx|max:20480',
+            'proposal_file' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+        ], [
+            'proposal_file.uploaded' => 'File proposal gagal diunggah. Pastikan ukuran file tidak melebihi batas (2MB).',
+            'proposal_file.max' => 'Ukuran file proposal maksimal adalah 2MB.',
+            'judul.required' => 'Judul skripsi wajib diisi.',
         ]);
 
         $deskripsi = collect([
@@ -62,7 +67,7 @@ class PengajuanController extends Controller
         if ($request->hasFile('proposal_file')) {
             $path = $request->file('proposal_file')->store('proposal_mahasiswa', 'public');
 
-            \App\Models\Dokumen::create([
+            Dokumen::create([
                 'skripsi_id' => $skripsi->id,
                 'jenis' => 'proposal',
                 'nama' => 'Proposal - '.$validated['judul'],
