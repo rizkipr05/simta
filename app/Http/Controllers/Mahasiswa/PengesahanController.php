@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\Skripsi;
 use Illuminate\Http\Request;
 
 class PengesahanController extends Controller
@@ -19,7 +20,7 @@ class PengesahanController extends Controller
         return view('mahasiswa.pengesahan.index', compact('mahasiswa', 'skripsi'));
     }
 
-    public function store(Request $request, \App\Models\Skripsi $skripsi)
+    public function store(Request $request, Skripsi $skripsi)
     {
         $request->validate([
             'file_pengesahan' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',

@@ -38,7 +38,6 @@ use App\Http\Controllers\Mahasiswa\DokumenController;
 use App\Http\Controllers\Mahasiswa\NotifikasiController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\RiwayatController;
-
 use App\Http\Controllers\Mahasiswa\UploadScanController;
 use App\Http\Controllers\Mahasiswa\YudisiumController as MahasiswaYudisium;
 use App\Http\Controllers\ProfileController;
@@ -185,7 +184,6 @@ Route::middleware('auth')->group(function () {
         Route::get('pengajuan/{skripsi}', [PengajuanController::class, 'show'])->name('pengajuan.show');
         Route::put('pengajuan/{skripsi}', [PengajuanController::class, 'update'])->name('pengajuan.update');
         Route::delete('pengajuan/{skripsi}', [PengajuanController::class, 'destroy'])->name('pengajuan.destroy');
-
 
         // Upload Scan / Pengesahan
         Route::get('pengesahan', [App\Http\Controllers\Mahasiswa\PengesahanController::class, 'index'])->name('pengesahan.index');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -87,8 +88,16 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Tidak dapat menghapus akun Anda sendiri.');
         }
 
-        $user->delete();
+        try {
+            $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+            return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+        } catch (QueryException $e) {
+            if ($e->getCode() == '23000') {
+                return redirect()->back()->with('error', 'Tidak dapat menghapus user karena masih memiliki data terkait (seperti dokumen, profil, dll).');
+            }
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus user.');
+        }
     }
 }

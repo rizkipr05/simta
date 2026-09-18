@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Kaprodi;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bimbingan;
 use App\Models\Mahasiswa;
 use App\Models\PendaftaranYudisium;
 use App\Models\Skripsi;

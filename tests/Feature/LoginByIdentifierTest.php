@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
+use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,7 @@ class LoginByIdentifierTest extends TestCase
             'is_active' => true,
         ]);
 
-        $prodi = \App\Models\ProgramStudi::create([
+        $prodi = ProgramStudi::create([
             'kode' => 'TI',
             'nama' => 'Teknik Informatika',
             'jenjang' => 'S1',

@@ -2,17 +2,17 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\Dosen;
+use App\Models\Mahasiswa;
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Models\Dosen;
-use App\Models\Mahasiswa;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class LoginRequest extends FormRequest
 {
