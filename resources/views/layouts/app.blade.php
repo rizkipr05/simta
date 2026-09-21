@@ -162,7 +162,7 @@
         </div>
 
         {{-- MAIN HEADER --}}
-        <header class="h-16 flex-shrink-0 bg-white border-b border-slate-200/80 flex items-center px-4 sm:px-6 gap-3 sm:gap-4 shadow-sm z-10">
+        <header class="h-16 flex-shrink-0 bg-white border-b border-slate-200/80 flex items-center px-4 sm:px-6 gap-3 sm:gap-4 shadow-sm z-20 relative">
             {{-- Mobile Toggle --}}
             <button @click="mobileOpen = true"
                     class="lg:hidden text-slate-600 hover:text-emerald-700 transition-colors p-2 rounded-xl hover:bg-slate-100 border border-slate-200">
@@ -182,32 +182,65 @@
             {{-- USER DROPDOWN --}}
             <div class="flex items-center gap-3">
                 <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open" class="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-3.5 py-1.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition shadow-sm">
-                        <img src="{{ auth()->user()->avatar_url }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-600" alt="">
-                        <div class="hidden sm:block text-left">
-                            <p class="text-xs font-bold text-slate-900 leading-tight">{{ auth()->user()->name }}</p>
-                            <p class="text-[10px] text-emerald-700 font-bold leading-tight uppercase tracking-wider">{{ auth()->user()->getRoleLabel() }}</p>
+                    <button @click="open = !open" class="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-3.5 py-1.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30">
+                        <img src="{{ auth()->user()->avatar_url }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-600" alt="{{ auth()->user()->name }}">
+                        <div class="hidden sm:block text-left max-w-[180px] md:max-w-[240px]">
+                            <p class="text-xs font-bold text-slate-900 leading-tight truncate" title="{{ auth()->user()->name }}">{{ auth()->user()->name }}</p>
+                            <p class="text-[10px] text-emerald-700 font-bold leading-tight uppercase tracking-wider truncate">{{ auth()->user()->getRoleLabel() }}</p>
                         </div>
-                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     <div x-show="open" @click.outside="open = false"
                          x-cloak
-                         x-transition class="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50">
-                        <div class="px-4 py-2.5 border-b border-slate-100 bg-emerald-50/60">
-                            <p class="text-sm font-bold text-slate-900 truncate">{{ auth()->user()->name }}</p>
-                            <span class="inline-block mt-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-700 text-white shadow-sm">{{ auth()->user()->getRoleLabel() }}</span>
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+                         class="absolute right-0 mt-2.5 w-72 sm:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200/90 py-2 z-50 overflow-hidden transform origin-top-right">
+                        <div class="px-4 py-3 border-b border-slate-100 bg-gradient-to-br from-emerald-50/90 via-teal-50/40 to-slate-50/50">
+                            <p class="text-sm font-extrabold text-slate-900 leading-snug break-words">{{ auth()->user()->name }}</p>
+                            <div class="mt-1.5 flex items-center gap-2">
+                                <span class="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-700 text-white shadow-xs">{{ auth()->user()->getRoleLabel() }}</span>
+                            </div>
                         </div>
-                        <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition">
-                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            Profil Saya
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-rose-600 hover:bg-rose-50 transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                                Keluar
-                            </button>
-                        </form>
+
+                        @if(auth()->user()->isDekan())
+                            <div class="px-2 py-1.5 border-b border-slate-100">
+                                <a href="{{ route('dekan.approvals.index') }}" class="flex items-center justify-between gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200/60 transition shadow-2xs group">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        Review SK Menunggu
+                                    </span>
+                                    <span class="bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full font-extrabold shadow-2xs">Persetujuan</span>
+                                </a>
+                            </div>
+                        @elseif(auth()->user()->isKaprodi())
+                            <div class="px-2 py-1.5 border-b border-slate-100">
+                                <a href="{{ route('kaprodi.skripsi.index') }}" class="flex items-center justify-between gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200/60 transition shadow-2xs group">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        Kelola Skripsi
+                                    </span>
+                                    <span class="bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full font-extrabold shadow-2xs">Kaprodi</span>
+                                </a>
+                            </div>
+                        @endif
+
+                        <div class="py-1">
+                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition">
+                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                Profil Saya
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-bold text-rose-600 hover:bg-rose-50 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                    Keluar
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
