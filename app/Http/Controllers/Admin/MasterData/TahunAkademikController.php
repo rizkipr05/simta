@@ -28,7 +28,13 @@ class TahunAkademikController extends Controller
             'tanggal_mulai' => 'nullable|date',
             'tanggal_selesai' => 'nullable|date|after:tanggal_mulai',
         ]);
-        TahunAkademik::create($validated);
+
+        $isAktif = $request->boolean('is_aktif');
+        if ($isAktif) {
+            TahunAkademik::where('is_aktif', true)->update(['is_aktif' => false]);
+        }
+
+        TahunAkademik::create(array_merge($validated, ['is_aktif' => $isAktif]));
 
         return redirect()->route('admin.master.tahun-akademik.index')->with('success', 'Tahun akademik berhasil ditambahkan.');
     }

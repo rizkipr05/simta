@@ -28,8 +28,8 @@
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Semester <span class="text-rose-500">*</span></label>
                     <select name="semester" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl text-sm font-medium transition" required>
-                        <option value="ganjil" {{ old('semester') == 'ganjil' ? 'selected' : '' }}>Ganjil</option>
-                        <option value="genap" {{ old('semester') == 'genap' ? 'selected' : '' }}>Genap</option>
+                        <option value="Ganjil" {{ old('semester') == 'Ganjil' ? 'selected' : '' }}>Ganjil</option>
+                        <option value="Genap" {{ old('semester') == 'Genap' ? 'selected' : '' }}>Genap</option>
                     </select>
                     @error('semester') <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p> @enderror
                 </div>
